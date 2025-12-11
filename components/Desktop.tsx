@@ -102,14 +102,14 @@ export const Desktop: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [calculateLayout]);
 
-  const launchApp = (appId: AppId) => {
+  const launchApp = (appId: AppId, args?: any) => {
     const appConfig = APPS[appId];
     
     // New windows start as Tiled by default (Hyprland style)
     const newWindow: WindowState = {
       id: generateId(),
       appId,
-      title: appConfig.title,
+      title: args?.title || appConfig.title,
       x: 0,
       y: 0,
       width: appConfig.defaultWidth,
@@ -118,6 +118,7 @@ export const Desktop: React.FC = () => {
       isMinimized: false,
       isMaximized: false,
       isFloating: false, 
+      args: args
     };
     
     setWindows(prev => calculateLayout([...prev, newWindow]));
@@ -214,7 +215,12 @@ export const Desktop: React.FC = () => {
             onFocus={focusWindow}
             onMove={moveWindow}
           >
-            <AppComp windowId={win.id} isActive={activeWindowId === win.id} />
+            <AppComp 
+                windowId={win.id} 
+                isActive={activeWindowId === win.id} 
+                onLaunchApp={launchApp}
+                args={win.args}
+            />
           </Window>
         );
       })}

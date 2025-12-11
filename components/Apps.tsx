@@ -5,10 +5,11 @@ import { Notepad } from './apps/Notepad';
 import { Browser } from './apps/Browser';
 import { SocialVerse } from './apps/SocialVerse';
 import { Steam } from './apps/Steam';
+import { GameRunner } from './apps/GameRunner';
 import { AppId, AppConfig, AppWindowProps } from '../types';
 import { 
   Monitor, 
-  Globe, 
+  Flame, 
   FileText, 
   Settings as SettingsIcon, 
   Files, 
@@ -126,8 +127,8 @@ export const APPS: Record<AppId, AppConfig> = {
   },
   [AppId.BROWSER]: {
     id: AppId.BROWSER,
-    title: 'Web Browser',
-    icon: Globe,
+    title: 'Firefox',
+    icon: Flame,
     component: Browser,
     defaultWidth: 800,
     defaultHeight: 600,
@@ -179,5 +180,13 @@ export const APPS: Record<AppId, AppConfig> = {
       component: Steam,
       defaultWidth: 1000,
       defaultHeight: 700,
+  },
+  [AppId.GAME]: {
+      id: AppId.GAME,
+      title: 'Game',
+      icon: Gamepad2,
+      component: GameRunner,
+      defaultWidth: 800,
+      defaultHeight: 600,
   }
 };

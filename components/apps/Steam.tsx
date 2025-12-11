@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppWindowProps } from '../../types';
+import { AppId, AppWindowProps } from '../../types';
 import { Search, Bell, Download, Monitor, Gamepad2, Star, Play, Settings, CreditCard, ShoppingCart, Check, X } from 'lucide-react';
 
 interface Game {
@@ -23,7 +23,7 @@ interface StoreItem {
     addedToCart?: boolean;
 }
 
-export const Steam: React.FC<AppWindowProps> = () => {
+export const Steam: React.FC<AppWindowProps> = ({ onLaunchApp }) => {
   const [activeTab, setActiveTab] = useState<'store' | 'library' | 'community' | 'profile'>('store');
   const [selectedGameId, setSelectedGameId] = useState<string>('cs2');
   const [wallet, setWallet] = useState(12.50);
@@ -69,12 +69,17 @@ export const Steam: React.FC<AppWindowProps> = () => {
     setLibraryGames(prev => prev.map(g => g.id === id ? { ...g, installing: true, progress: 0 } : g));
   };
 
-  const handlePlay = (id: string) => {
+  const handlePlay = (game: Game) => {
+    // Launch the game window
+    if (!game.playing) {
+        onLaunchApp(AppId.GAME, { gameId: game.id, title: game.title });
+    }
+    
+    // Toggle state in UI
     setLibraryGames(prev => prev.map(g => {
-        if (g.id === id) {
+        if (g.id === game.id) {
             return { ...g, playing: !g.playing };
         }
-        // Stop others if single instance logic desired, but let's allow multi-tasking for chaos
         return g;
     }));
   };
@@ -155,7 +160,7 @@ export const Steam: React.FC<AppWindowProps> = () => {
                          </div>
                     ) : (
                         <button 
-                            onClick={() => selected.installed ? handlePlay(selected.id) : handleInstall(selected.id)}
+                            onClick={() => selected.installed ? handlePlay(selected) : handleInstall(selected.id)}
                             className={`${selected.playing ? 'bg-green-600 hover:bg-green-500' : selected.installed ? 'bg-[#66c0f4] hover:bg-[#419bc9]' : 'bg-slate-700 hover:bg-slate-600'} text-white px-8 py-3 rounded-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all w-[160px] justify-center`}
                         >
                             {selected.playing ? (

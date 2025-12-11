@@ -10,6 +10,7 @@ export enum AppId {
   CHAT = 'chat',
   SOCIAL = 'social',
   STEAM = 'steam',
+  GAME = 'game',
 }
 
 export interface AppConfig {
@@ -33,11 +34,14 @@ export interface WindowState {
   isMinimized: boolean;
   isMaximized: boolean;
   isFloating: boolean;
+  args?: any; // Arguments passed to the app on launch
 }
 
 export interface AppWindowProps {
   windowId: string;
   isActive: boolean;
+  onLaunchApp: (appId: AppId, args?: any) => void;
+  args?: any;
 }
 
 export interface FileSystemNode {
